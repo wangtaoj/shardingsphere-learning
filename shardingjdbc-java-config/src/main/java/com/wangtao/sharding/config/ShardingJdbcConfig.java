@@ -86,9 +86,10 @@ public class ShardingJdbcConfig {
     }
 
     private AlgorithmConfiguration classBasedAlgorithmConfiguration() {
+        // shardingjdbc内部会将属性值通过toString方法全部转为String
         Properties properties = new Properties();
         // ClassBasedShardingAlgorithm算法必传的两个参数
-        properties.put("strategy", ClassBasedShardingAlgorithmStrategyType.STANDARD.toString());
+        properties.put("strategy", ClassBasedShardingAlgorithmStrategyType.STANDARD);
         properties.put("algorithmClassName", HalfYearShardingStrategyAlgorithm.class.getName());
         // HalfYearShardingStrategyAlgorithm自定义参数
         properties.put("startYear", 2023);
