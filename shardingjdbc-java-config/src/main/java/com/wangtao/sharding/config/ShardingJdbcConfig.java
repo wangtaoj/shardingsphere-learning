@@ -1,5 +1,6 @@
 package com.wangtao.sharding.config;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.shardingsphere.broadcast.api.config.BroadcastRuleConfiguration;
 import org.apache.shardingsphere.driver.api.ShardingSphereDataSourceFactory;
 import org.apache.shardingsphere.infra.config.algorithm.AlgorithmConfiguration;
@@ -47,6 +48,10 @@ public class ShardingJdbcConfig {
 
     private ModeConfiguration modeConfiguration() {
         Properties properties = new Properties();
+        properties.setProperty("provider", "MySQL");
+        properties.setProperty("jdbc_url", "jdbc:mysql://localhost:3306/tradedb?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
+        properties.setProperty("username", "root");
+        properties.setProperty("password", "123456");
         StandalonePersistRepositoryConfiguration persistRepositoryConfiguration =
                 new StandalonePersistRepositoryConfiguration("JDBC", properties);
         return new ModeConfiguration("Standalone", persistRepositoryConfiguration);
@@ -54,9 +59,10 @@ public class ShardingJdbcConfig {
 
     private Map<String, DataSource> dataSourceMap() {
         Map<String, DataSource> dataSourceMap = new HashMap<>();
-        org.apache.tomcat.jdbc.pool.DataSource dataSource1 = new org.apache.tomcat.jdbc.pool.DataSource();
+        // 使用tomcat数据源由于元数据存在时反序列化时信息不对称, 导致连接不上
+        HikariDataSource dataSource1 = new HikariDataSource();
         dataSource1.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource1.setUrl("jdbc:mysql://localhost:3306/tradedb?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
+        dataSource1.setJdbcUrl("jdbc:mysql://localhost:3306/tradedb?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
         dataSource1.setUsername("root");
         dataSource1.setPassword("123456");
         dataSourceMap.put("tradedb", dataSource1);
@@ -87,13 +93,13 @@ public class ShardingJdbcConfig {
     }
 
     private AlgorithmConfiguration classBasedAlgorithmConfiguration() {
-        // shardingjdbc内部会将属性值通过toString方法全部转为String
+        // 属性全部使用字符串形式, 否则再次启动时由于类型序列化可能导致启动报错
         Properties properties = new Properties();
         // ClassBasedShardingAlgorithm算法必传的两个参数
-        properties.put("strategy", ClassBasedShardingAlgorithmStrategyType.STANDARD);
-        properties.put("algorithmClassName", HalfYearShardingStrategyAlgorithm.class.getName());
+        properties.setProperty("strategy", ClassBasedShardingAlgorithmStrategyType.STANDARD.toString());
+        properties.setProperty("algorithmClassName", HalfYearShardingStrategyAlgorithm.class.getName());
         // HalfYearShardingStrategyAlgorithm自定义参数
-        properties.put("startYear", 2023);
+        properties.setProperty("startYear", "2023");
         return new AlgorithmConfiguration("CLASS_BASED", properties);
     }
 
