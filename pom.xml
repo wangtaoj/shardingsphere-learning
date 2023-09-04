@@ -10,7 +10,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>shardingjdbc-learning</module>
+    <module>shardingjdbc-java-config</module>
   </modules>
 
   <properties>
