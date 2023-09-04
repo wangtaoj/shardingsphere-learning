@@ -22,7 +22,7 @@ public class HalfYearShardingStrategyAlgorithm implements StandardShardingAlgori
 
     @Override
     public void init(Properties props) {
-        if (props.contains(START_YEAR_KEY)) {
+        if (props.containsKey(START_YEAR_KEY)) {
             this.startYear = Integer.parseInt(props.getProperty(START_YEAR_KEY));
         } else {
             this.startYear = LocalDate.now().getYear();
