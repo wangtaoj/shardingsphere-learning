@@ -46,6 +46,11 @@ public class ShardingJdbcConfig {
         return ShardingSphereDataSourceFactory.createDataSource(databaseName, modeConfig, dataSourceMap, ruleConfigs, props);
     }
 
+    /**
+     * 元数据保存在repository表中
+     * 规则信息key: /metadata/tradedb/versions/0/rules
+     * 数据源信息key: /metadata/tradedb/versions/0/data_sources
+     */
     private ModeConfiguration modeConfiguration() {
         Properties properties = new Properties();
         properties.setProperty("provider", "MySQL");
