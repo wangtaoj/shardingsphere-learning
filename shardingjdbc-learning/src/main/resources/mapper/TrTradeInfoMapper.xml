@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangtao.sharding.mapper.TrTradeInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.wangtao.sharding.entity.TrTradeInfo">
+            <id property="txnId" column="txn_id" jdbcType="BIGINT"/>
+            <result property="prodCd" column="prod_cd" jdbcType="VARCHAR"/>
+            <result property="assetCd" column="asset_cd" jdbcType="VARCHAR"/>
+            <result property="txnDt" column="txn_dt" jdbcType="DATE"/>
+            <result property="txnCnt" column="txn_cnt" jdbcType="DECIMAL"/>
+            <result property="txnAmt" column="txn_amt" jdbcType="DECIMAL"/>
+            <result property="delFlg" column="del_flg" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        txn_id,prod_cd,asset_cd,
+        txn_dt,txn_cnt,txn_amt,
+        del_flg,create_time,update_time
+    </sql>
+
+  <select id="selectByCondition" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from tr_trade_info
+    where del_flg = 1
+    and txn_dt between #{beginTxnDt} and #{endTxnDt}
+  </select>
+</mapper>
