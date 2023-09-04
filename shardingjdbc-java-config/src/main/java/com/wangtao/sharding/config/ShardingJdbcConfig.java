@@ -46,8 +46,9 @@ public class ShardingJdbcConfig {
     }
 
     private ModeConfiguration modeConfiguration() {
+        Properties properties = new Properties();
         StandalonePersistRepositoryConfiguration persistRepositoryConfiguration =
-                new StandalonePersistRepositoryConfiguration("JDBC", new Properties());
+                new StandalonePersistRepositoryConfiguration("JDBC", properties);
         return new ModeConfiguration("Standalone", persistRepositoryConfiguration);
     }
 
@@ -55,7 +56,7 @@ public class ShardingJdbcConfig {
         Map<String, DataSource> dataSourceMap = new HashMap<>();
         org.apache.tomcat.jdbc.pool.DataSource dataSource1 = new org.apache.tomcat.jdbc.pool.DataSource();
         dataSource1.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource1.setUrl("jdbc:mysql://localhost:3306/tradedb");
+        dataSource1.setUrl("jdbc:mysql://localhost:3306/tradedb?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
         dataSource1.setUsername("root");
         dataSource1.setPassword("123456");
         dataSourceMap.put("tradedb", dataSource1);
