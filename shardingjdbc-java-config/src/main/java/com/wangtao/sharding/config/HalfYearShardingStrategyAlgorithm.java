@@ -27,7 +27,6 @@ public class HalfYearShardingStrategyAlgorithm implements StandardShardingAlgori
         } else {
             this.startYear = LocalDate.now().getYear();
         }
-
     }
 
     /**
