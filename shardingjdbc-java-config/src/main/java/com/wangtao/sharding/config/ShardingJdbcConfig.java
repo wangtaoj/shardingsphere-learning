@@ -12,6 +12,7 @@ import org.apache.shardingsphere.sharding.api.config.ShardingRuleConfiguration;
 import org.apache.shardingsphere.sharding.api.config.rule.ShardingTableRuleConfiguration;
 import org.apache.shardingsphere.sharding.api.config.strategy.keygen.KeyGenerateStrategyConfiguration;
 import org.apache.shardingsphere.sharding.api.config.strategy.sharding.StandardShardingStrategyConfiguration;
+import org.apache.shardingsphere.single.api.config.SingleRuleConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -87,7 +88,11 @@ public class ShardingJdbcConfig {
 
         // 广播表, 新增修改时每个库都会执行, 一般都是公共表, 且不分表, 每个库的数据和表结构一致
         BroadcastRuleConfiguration broadcastRuleConfiguration = new BroadcastRuleConfiguration(List.of("user"));
-        return List.of(shardingRuleConfiguration, broadcastRuleConfiguration);
+
+        // 单表, 数据源中特有的表, 不是所有库都有这个表
+        SingleRuleConfiguration singleRuleConfiguration = new SingleRuleConfiguration();
+        singleRuleConfiguration.getTables().add("tradedb_1.single_table");
+        return List.of(shardingRuleConfiguration, broadcastRuleConfiguration, singleRuleConfiguration);
     }
 
     private ShardingTableRuleConfiguration getTrTradeInfoTableRuleConfiguration() {

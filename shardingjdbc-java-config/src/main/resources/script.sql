@@ -17,6 +17,11 @@ create table user
 
 INSERT INTO user (user_id, login_name, passowrd, nickname, age, birthday, del_flg, create_time, update_time) VALUES (5858848, 'zhangsan', '123456', '张三', 25, '2023-09-03', 1, '2023-09-03 00:37:14', '2023-09-03 00:37:18');
 
+create table single_table
+(
+    id bigint auto_increment primary key comment '用户编号'
+) default character set utf8mb4 comment '单表';
+
 create table tr_trade_info_0
 (
     txn_id bigint primary key comment '交易编号',
