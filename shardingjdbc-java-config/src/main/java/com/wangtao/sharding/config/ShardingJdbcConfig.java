@@ -9,6 +9,7 @@ import org.apache.shardingsphere.infra.config.rule.RuleConfiguration;
 import org.apache.shardingsphere.mode.repository.standalone.StandalonePersistRepositoryConfiguration;
 import org.apache.shardingsphere.sharding.algorithm.sharding.classbased.ClassBasedShardingAlgorithmStrategyType;
 import org.apache.shardingsphere.sharding.api.config.ShardingRuleConfiguration;
+import org.apache.shardingsphere.sharding.api.config.rule.ShardingAutoTableRuleConfiguration;
 import org.apache.shardingsphere.sharding.api.config.rule.ShardingTableRuleConfiguration;
 import org.apache.shardingsphere.sharding.api.config.strategy.keygen.KeyGenerateStrategyConfiguration;
 import org.apache.shardingsphere.sharding.api.config.strategy.sharding.StandardShardingStrategyConfiguration;
@@ -83,7 +84,11 @@ public class ShardingJdbcConfig {
     private Collection<RuleConfiguration> ruleConfigs() {
         ShardingRuleConfiguration shardingRuleConfiguration = new ShardingRuleConfiguration();
         shardingRuleConfiguration.getTables().add(getTrTradeInfoTableRuleConfiguration());
+        // shardingRuleConfiguration.getAutoTables().add(getTrTradeInfoAutoTableRuleConfiguration());
+        // 自定义分片算法, 根据半年分一次
         shardingRuleConfiguration.getShardingAlgorithms().put("halfYear", classBasedAlgorithmConfiguration());
+        // 自动时间段分片算法, 根据半年分一次(自动分片算法必须搭配autoTables)
+        shardingRuleConfiguration.getShardingAlgorithms().put("halfYearBuiltIn", autoIntervalAlgorithmConfiguration());
         shardingRuleConfiguration.getKeyGenerators().put("snowflake", snowflakeAlgorithmConfiguration());
 
         // 广播表, 新增修改时每个库都会执行, 一般都是公共表, 且不分表, 每个库的数据和表结构一致
@@ -102,8 +107,21 @@ public class ShardingJdbcConfig {
         // 库分片策略
         tableRuleConfiguration.setDatabaseShardingStrategy(null);
         // 表分片策越
-        tableRuleConfiguration.setTableShardingStrategy(new StandardShardingStrategyConfiguration("txn_dt", "halfYear"));
+        tableRuleConfiguration.setTableShardingStrategy(
+                new StandardShardingStrategyConfiguration("txn_dt", "halfYear")
+        );
         // 主键生成策略
+        tableRuleConfiguration.setKeyGenerateStrategy(new KeyGenerateStrategyConfiguration("txn_id", "snowflake"));
+        return tableRuleConfiguration;
+    }
+
+    @SuppressWarnings("unused")
+    private ShardingAutoTableRuleConfiguration getTrTradeInfoAutoTableRuleConfiguration() {
+        ShardingAutoTableRuleConfiguration tableRuleConfiguration =
+                new ShardingAutoTableRuleConfiguration("tr_trade_info", "tradedb_${[1]}");
+        tableRuleConfiguration.setShardingStrategy(
+                new StandardShardingStrategyConfiguration("create_time", "halfYearBuiltIn")
+        );
         tableRuleConfiguration.setKeyGenerateStrategy(new KeyGenerateStrategyConfiguration("txn_id", "snowflake"));
         return tableRuleConfiguration;
     }
@@ -117,6 +135,16 @@ public class ShardingJdbcConfig {
         // HalfYearShardingStrategyAlgorithm自定义参数
         properties.setProperty("startYear", "2023");
         return new AlgorithmConfiguration("CLASS_BASED", properties);
+    }
+
+    private AlgorithmConfiguration autoIntervalAlgorithmConfiguration() {
+        // 属性全部使用字符串形式, 否则再次启动时由于类型序列化可能导致启动报错
+        Properties properties = new Properties();
+        properties.setProperty("datetime-lower", "2023-01-01 00:00:00");
+        properties.setProperty("datetime-upper", "2024-01-01 00:00:00");
+        // 半年(只能近似表示)
+        properties.setProperty("sharding-seconds", String.valueOf(3600 * 24 * 30 * 6));
+        return new AlgorithmConfiguration("AUTO_INTERVAL", properties);
     }
 
     private AlgorithmConfiguration snowflakeAlgorithmConfiguration() {
