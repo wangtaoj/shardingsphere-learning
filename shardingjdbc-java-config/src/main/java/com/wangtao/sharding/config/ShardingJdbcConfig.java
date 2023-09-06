@@ -53,6 +53,7 @@ public class ShardingJdbcConfig {
      * 元数据保存在repository表中
      * 规则信息key: /metadata/tradedb/versions/0/rules
      * 数据源信息key: /metadata/tradedb/versions/0/data_sources
+     * 数据表key parent: /metadata/tradedb/schemas/tradedb/tables
      */
     private ModeConfiguration modeConfiguration() {
         Properties properties = new Properties();
