@@ -83,7 +83,7 @@ public class ShardingJdbcConfig {
     private Collection<RuleConfiguration> ruleConfigs() {
         ShardingRuleConfiguration shardingRuleConfiguration = new ShardingRuleConfiguration();
         shardingRuleConfiguration.getTables().add(getTrTradeInfoTableRuleConfiguration());
-        shardingRuleConfiguration.getShardingAlgorithms().put("dateBased", classBasedAlgorithmConfiguration());
+        shardingRuleConfiguration.getShardingAlgorithms().put("halfYear", classBasedAlgorithmConfiguration());
         shardingRuleConfiguration.getKeyGenerators().put("snowflake", snowflakeAlgorithmConfiguration());
 
         // 广播表, 新增修改时每个库都会执行, 一般都是公共表, 且不分表, 每个库的数据和表结构一致
@@ -102,7 +102,7 @@ public class ShardingJdbcConfig {
         // 库分片策略
         tableRuleConfiguration.setDatabaseShardingStrategy(null);
         // 表分片策越
-        tableRuleConfiguration.setTableShardingStrategy(new StandardShardingStrategyConfiguration("txn_dt", "dateBased"));
+        tableRuleConfiguration.setTableShardingStrategy(new StandardShardingStrategyConfiguration("txn_dt", "halfYear"));
         // 主键生成策略
         tableRuleConfiguration.setKeyGenerateStrategy(new KeyGenerateStrategyConfiguration("txn_id", "snowflake"));
         return tableRuleConfiguration;
