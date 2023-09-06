@@ -1,5 +1,6 @@
 package com.wangtao.sharding.config;
 
+import org.apache.shardingsphere.sharding.algorithm.sharding.ShardingAutoTableAlgorithmUtils;
 import org.apache.shardingsphere.sharding.api.sharding.standard.PreciseShardingValue;
 import org.apache.shardingsphere.sharding.api.sharding.standard.RangeShardingValue;
 import org.apache.shardingsphere.sharding.api.sharding.standard.StandardShardingAlgorithm;
@@ -35,8 +36,9 @@ public class HalfYearShardingStrategyAlgorithm implements StandardShardingAlgori
     @Override
     public String doSharding(Collection<String> availableTargetNames, PreciseShardingValue<LocalDate> shardingValue) {
         LocalDate txnDt = shardingValue.getValue();
-        int sharding = getShardingCount(txnDt);
-        return shardingValue.getDataNodeInfo().getPrefix() + sharding;
+        String tableNameSuffix = String.valueOf(getShardingCount(txnDt));
+        return ShardingAutoTableAlgorithmUtils.findMatchedTargetName(availableTargetNames, tableNameSuffix,
+                shardingValue.getDataNodeInfo()).orElse(null);
     }
 
     @Override
@@ -47,7 +49,9 @@ public class HalfYearShardingStrategyAlgorithm implements StandardShardingAlgori
         int startIndex = getShardingCount(beginTxnDt);
         int endIndex = getShardingCount(endTxnDt);
         for (int i = startIndex; i <=endIndex; i++) {
-            results.add(shardingValue.getDataNodeInfo().getPrefix() + i);
+            String suffix = String.valueOf(i);
+            ShardingAutoTableAlgorithmUtils.findMatchedTargetName(availableTargetNames, suffix,
+                    shardingValue.getDataNodeInfo()).ifPresent(results::add);
         }
         return results;
     }
