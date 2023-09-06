@@ -75,7 +75,7 @@ public class ShardingJdbcConfig {
         dataSource1.setJdbcUrl("jdbc:mysql://localhost:3306/tradedb_1?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
         dataSource1.setUsername("root");
         dataSource1.setPassword("123456");
-        // 注意key是真实的数据库名称, 否则加载不了表的元数据
+        // 注意key是真实的数据库名称, 否则加载不了表的元数据(单表、广播表)
         dataSourceMap.put("tradedb_1", dataSource1);
         return dataSourceMap;
     }
