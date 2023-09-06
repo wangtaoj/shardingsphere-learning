@@ -1,6 +1,6 @@
-create database if not exists tradedb default character set utf8mb4;
+create database if not exists tradedb_1 default character set utf8mb4;
 
-use tradedb;
+use tradedb_1;
 
 create table user
 (
@@ -15,6 +15,8 @@ create table user
     update_time datetime not null comment '修改时间'
 ) default character set utf8mb4 comment '用户表';
 
+INSERT INTO user (user_id, login_name, passowrd, nickname, age, birthday, del_flg, create_time, update_time) VALUES (5858848, 'zhangsan', '123456', '张三', 25, '2023-09-03', 1, '2023-09-03 00:37:14', '2023-09-03 00:37:18');
+
 create table tr_trade_info_0
 (
     txn_id bigint primary key comment '交易编号',
@@ -27,6 +29,10 @@ create table tr_trade_info_0
     create_time datetime not null comment '创建时间',
     update_time datetime not null comment '修改时间'
 ) default character set utf8mb4 comment '交易表';
+
+INSERT INTO tr_trade_info_0 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, del_flg, create_time, update_time) VALUES (2023010500001, '12345678', '000001', '2023-01-05', 100, 10000.00, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');
+INSERT INTO tr_trade_info_0 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, del_flg, create_time, update_time) VALUES (2023030500001, '12345678', '000001', '2023-03-05', 100, 10000.00, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');
+INSERT INTO tr_trade_info_0 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, del_flg, create_time, update_time) VALUES (2023053100001, '12345678', '000001', '2023-05-31', 100, 10000.00, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');
 
 create table tr_trade_info_1
 (
@@ -41,6 +47,10 @@ create table tr_trade_info_1
     update_time datetime not null comment '修改时间'
 ) default character set utf8mb4 comment '交易表';
 
+INSERT INTO tr_trade_info_1 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, del_flg, create_time, update_time) VALUES (2023070100001, '12345678', '000001', '2023-07-01', 100, 10000.00, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');
+INSERT INTO tr_trade_info_1 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, del_flg, create_time, update_time) VALUES (2023090100001, '12345678', '000001', '2023-09-01', 100, 10000.00, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');
+INSERT INTO tr_trade_info_1 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, del_flg, create_time, update_time) VALUES (2023123100001, '12345678', '000001', '2023-12-31', 100, 10000.00, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');
+
 create table tr_trade_info_2
 (
     txn_id bigint primary key comment '交易编号',
@@ -54,6 +64,10 @@ create table tr_trade_info_2
     update_time datetime not null comment '修改时间'
 ) default character set utf8mb4 comment '交易表';
 
+INSERT INTO tr_trade_info_2 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, del_flg, create_time, update_time) VALUES (2024010500001, '12345678', '000001', '2024-01-05', 100, 10000.00, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');
+INSERT INTO tr_trade_info_2 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, del_flg, create_time, update_time) VALUES (2024030500001, '12345678', '000001', '2024-03-05', 100, 10000.00, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');
+INSERT INTO tr_trade_info_2 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, del_flg, create_time, update_time) VALUES (2024053100001, '12345678', '000001', '2024-05-31', 100, 10000.00, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');
+
 create table tr_trade_info_3
 (
     txn_id bigint primary key comment '交易编号',
@@ -66,3 +80,7 @@ create table tr_trade_info_3
     create_time datetime not null comment '创建时间',
     update_time datetime not null comment '修改时间'
 ) default character set utf8mb4 comment '交易表';
+
+INSERT INTO tr_trade_info_3 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, del_flg, create_time, update_time) VALUES (2024070100001, '12345678', '000001', '2024-07-01', 100, 10000.00, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');
+INSERT INTO tr_trade_info_3 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, del_flg, create_time, update_time) VALUES (2024090100001, '12345678', '000001', '2024-09-01', 100, 10000.00, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');
+INSERT INTO tr_trade_info_3 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, del_flg, create_time, update_time) VALUES (2024123100001, '12345678', '000001', '2024-12-31', 100, 10000.00, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');

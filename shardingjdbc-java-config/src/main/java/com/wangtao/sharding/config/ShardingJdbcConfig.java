@@ -28,6 +28,7 @@ public class ShardingJdbcConfig {
 
     /**
      * 注入shardingjdbc构建出来的数据源
+     * 如果表没有加载到元数据中，请检查actualDataNodes属性, 要配置真实的database.table
      */
     @Bean
     public DataSource dataSource() throws SQLException {
@@ -54,7 +55,7 @@ public class ShardingJdbcConfig {
     private ModeConfiguration modeConfiguration() {
         Properties properties = new Properties();
         properties.setProperty("provider", "MySQL");
-        properties.setProperty("jdbc_url", "jdbc:mysql://localhost:3306/tradedb?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
+        properties.setProperty("jdbc_url", "jdbc:mysql://localhost:3306/tradedb_1?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
         properties.setProperty("username", "root");
         properties.setProperty("password", "123456");
         StandalonePersistRepositoryConfiguration persistRepositoryConfiguration =
@@ -67,10 +68,11 @@ public class ShardingJdbcConfig {
         // 使用tomcat数据源由于元数据存在时反序列化时信息不对称, 导致连接不上
         HikariDataSource dataSource1 = new HikariDataSource();
         dataSource1.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource1.setJdbcUrl("jdbc:mysql://localhost:3306/tradedb?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
+        dataSource1.setJdbcUrl("jdbc:mysql://localhost:3306/tradedb_1?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
         dataSource1.setUsername("root");
         dataSource1.setPassword("123456");
-        dataSourceMap.put("tradedb", dataSource1);
+        // 注意key是真实的数据库名称
+        dataSourceMap.put("tradedb_1", dataSource1);
         return dataSourceMap;
     }
 
@@ -87,7 +89,7 @@ public class ShardingJdbcConfig {
 
     private ShardingTableRuleConfiguration getTrTradeInfoTableRuleConfiguration() {
         ShardingTableRuleConfiguration tableRuleConfiguration =
-                new ShardingTableRuleConfiguration("tr_trade_info", "tradedb.tr_trade_info_${0..3}");
+                new ShardingTableRuleConfiguration("tr_trade_info", "tradedb_${[1]}.tr_trade_info_${0..3}");
         // 库分片策略
         tableRuleConfiguration.setDatabaseShardingStrategy(null);
         // 表分片策越
