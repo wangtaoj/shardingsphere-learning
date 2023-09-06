@@ -91,6 +91,7 @@ public class ShardingJdbcConfig {
 
         // 单表, 数据源中特有的表, 不是所有库都有这个表
         SingleRuleConfiguration singleRuleConfiguration = new SingleRuleConfiguration();
+        // 特别的可以使用*.*来加载所有表
         singleRuleConfiguration.getTables().add("tradedb_1.single_table");
         return List.of(shardingRuleConfiguration, broadcastRuleConfiguration, singleRuleConfiguration);
     }
