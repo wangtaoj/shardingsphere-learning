@@ -28,7 +28,9 @@ public class ShardingJdbcConfig {
 
     /**
      * 注入shardingjdbc构建出来的数据源
-     * 如果表没有加载到元数据中，请检查actualDataNodes属性, 要配置真实的database.table
+     * 如果表没有加载到元数据中
+     * 1) 检查actualDataNodes属性, 要配置真实的database.table
+     * 2) 检查数据源的key, 必须为真实的database name
      */
     @Bean
     public DataSource dataSource() throws SQLException {
@@ -71,7 +73,7 @@ public class ShardingJdbcConfig {
         dataSource1.setJdbcUrl("jdbc:mysql://localhost:3306/tradedb_1?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
         dataSource1.setUsername("root");
         dataSource1.setPassword("123456");
-        // 注意key是真实的数据库名称
+        // 注意key是真实的数据库名称, 否则加载不了表的元数据
         dataSourceMap.put("tradedb_1", dataSource1);
         return dataSourceMap;
     }
