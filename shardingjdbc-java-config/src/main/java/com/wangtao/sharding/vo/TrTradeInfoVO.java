@@ -1,29 +1,21 @@
-package com.wangtao.sharding.entity;
+package com.wangtao.sharding.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * 交易表
+ * @author wangtao
+ * Created at 2023/9/7 21:07
  */
-@TableName(value ="tr_trade_info")
 @Data
-public class TrTradeInfo implements Serializable {
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
+public class TrTradeInfoVO {
 
     /**
      * 交易编号
      */
-    @TableId
     private Long txnId;
 
     /**
@@ -55,6 +47,11 @@ public class TrTradeInfo implements Serializable {
      * 交易员
      */
     private Long txnUserId;
+
+    /**
+     * 交易员名称
+     */
+    private String txnUserName;
 
     /**
      * 删除标志

@@ -11,6 +11,7 @@
             <result property="txnDt" column="txn_dt" jdbcType="DATE"/>
             <result property="txnCnt" column="txn_cnt" jdbcType="DECIMAL"/>
             <result property="txnAmt" column="txn_amt" jdbcType="DECIMAL"/>
+            <result property="txnUserId" column="txn_user_id" jdbcType="BIGINT"/>
             <result property="delFlg" column="del_flg" jdbcType="TINYINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
@@ -18,15 +19,27 @@
 
     <sql id="Base_Column_List">
         txn_id,prod_cd,asset_cd,
-        txn_dt,txn_cnt,txn_amt,
+        txn_dt,txn_cnt,txn_amt,txn_user_id,
         del_flg,create_time,update_time
     </sql>
 
-  <select id="selectByCondition" resultMap="BaseResultMap">
+  <select id="selectByCondition" resultType="com.wangtao.sharding.vo.TrTradeInfoVO">
     select
-    <include refid="Base_Column_List"/>
-    from tr_trade_info
-    where del_flg = 1
-    and txn_dt between #{beginTxnDt} and #{endTxnDt}
+      tti.txn_id,
+      tti.prod_cd,
+      tti.asset_cd,
+      tti.txn_dt,
+      tti.txn_cnt,
+      tti.txn_amt,
+      tti.txn_user_id,
+      tti.del_flg,
+      tti.create_time,
+      tti.update_time
+    from tr_trade_info tti
+    left join user
+    on tti.txn_user_id = user.user_id and user.del_flg = 1
+    where tti.del_flg = 1
+    and tti.txn_dt between #{trTradeInfo.beginTxnDt} and #{trTradeInfo.endTxnDt}
+    order by tti.txn_cnt desc
   </select>
 </mapper>
