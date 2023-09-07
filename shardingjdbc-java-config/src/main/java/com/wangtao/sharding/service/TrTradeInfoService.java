@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.wangtao.sharding.entity.TrTradeInfo;
 import com.wangtao.sharding.mapper.TrTradeInfoMapper;
+import com.wangtao.sharding.util.DateUtils;
 import com.wangtao.sharding.vo.TrTradeInfoQueryVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,17 @@ public class TrTradeInfoService {
                 .eq(TrTradeInfo::getTxnDt, txnDt)
                 .eq(TrTradeInfo::getDelFlg, 1);
         return trTradeInfoMapper.selectList(queryWrapper);
+    }
+
+    /**
+     * 基因法，交易编号携带分片键
+     */
+    public TrTradeInfo selectByTxnId(Long txnId) {
+        String txnDt = String.valueOf(txnId).substring(0, 8);
+        Wrapper<TrTradeInfo> queryWrapper = new LambdaQueryWrapper<TrTradeInfo>()
+                .eq(TrTradeInfo::getTxnId, txnId)
+                .eq(TrTradeInfo::getTxnDt, DateUtils.parseIntegerDate(txnDt))
+                .eq(TrTradeInfo::getDelFlg, 1);
+        return trTradeInfoMapper.selectOne(queryWrapper);
     }
 }

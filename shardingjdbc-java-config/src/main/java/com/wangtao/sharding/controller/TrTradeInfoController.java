@@ -5,10 +5,7 @@ import com.wangtao.sharding.service.TrTradeInfoService;
 import com.wangtao.sharding.vo.TrTradeInfoQueryVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,5 +30,10 @@ public class TrTradeInfoController {
     public List<TrTradeInfo> queryByTxnDt(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                               @RequestParam LocalDate txnDt) {
         return trTradeInfoService.selectByTxnDt(txnDt);
+    }
+
+    @PostMapping("/detail/{txnId}")
+    public TrTradeInfo queryByTxnId(@PathVariable Long txnId) {
+        return trTradeInfoService.selectByTxnId(txnId);
     }
 }
