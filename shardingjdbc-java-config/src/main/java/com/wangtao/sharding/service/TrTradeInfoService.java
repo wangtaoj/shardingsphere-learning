@@ -31,6 +31,7 @@ public class TrTradeInfoService {
      * 内存排序需要把每个表的数据全部查出来，才能保证全局有序
      * 比如pageNum=2, pageSize=3
      * 改写SQL分页为limit 0, 6，而不是原本的limit 3,3
+     * 这也意味着分页很大时，因为需要把前面不需要的数据也加载到内存中，会导致内存溢出问题
      */
     public IPage<TrTradeInfoVO> selectByCondition(TrTradeInfoQueryVO trTradeInfoQuery, int pageNum, int pageSize) {
         IPage<TrTradeInfoVO> page = new Page<>(pageNum, pageSize);
