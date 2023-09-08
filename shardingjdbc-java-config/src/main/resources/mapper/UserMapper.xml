@@ -5,15 +5,15 @@
 <mapper namespace="com.wangtao.sharding.mapper.UserMapper">
 
     <resultMap id="BaseResultMap" type="com.wangtao.sharding.entity.User">
-            <id property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="loginName" column="login_name" jdbcType="VARCHAR"/>
-            <result property="passowrd" column="passowrd" jdbcType="VARCHAR"/>
-            <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
-            <result property="age" column="age" jdbcType="INTEGER"/>
-            <result property="birthday" column="birthday" jdbcType="DATE"/>
-            <result property="delFlg" column="del_flg" jdbcType="TINYINT"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="loginName" column="login_name" jdbcType="VARCHAR"/>
+        <result property="passowrd" column="passowrd" jdbcType="VARCHAR"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="age" column="age" jdbcType="INTEGER"/>
+        <result property="birthday" column="birthday" jdbcType="DATE"/>
+        <result property="delFlg" column="del_flg" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
