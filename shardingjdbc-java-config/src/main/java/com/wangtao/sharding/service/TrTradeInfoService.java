@@ -13,7 +13,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,12 +34,11 @@ public class TrTradeInfoService {
     /**
      * 批量新增, 跨表, 会拆成多个SQL
      */
-    @Transactional
     public void batchInsert(List<TrTradeInfo> trTradeInfos) {
         if (CollectionUtils.isEmpty(trTradeInfos)) {
             return;
         }
-        ListUtils.partition(trTradeInfos, 100).forEach(trTradeInfoMapper::insertBatch);
+        ListUtils.partition(trTradeInfos, 1000).forEach(trTradeInfoMapper::insertBatch);
     }
 
     /**

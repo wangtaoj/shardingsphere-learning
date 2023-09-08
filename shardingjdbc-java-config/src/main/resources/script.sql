@@ -37,7 +37,9 @@ create table tr_trade_info_0
     txn_user_id bigint comment '交易员',
     del_flg tinyint not null comment '删除标志',
     create_time datetime not null comment '创建时间',
-    update_time datetime not null comment '修改时间'
+    update_time datetime not null comment '修改时间',
+    index idx_txn_dt(txn_dt),
+    index idx_prod_cd_asset_cd(prod_cd, asset_cd)
 ) default character set utf8mb4 comment '交易表';
 
 INSERT INTO tr_trade_info_0 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, txn_user_id, del_flg, create_time, update_time) VALUES (2023010500001, '12345678', '000001', '2023-01-05', 100, 10000.00, 1, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');
@@ -55,7 +57,9 @@ create table tr_trade_info_1
     txn_user_id bigint comment '交易员',
     del_flg tinyint not null comment '删除标志',
     create_time datetime not null comment '创建时间',
-    update_time datetime not null comment '修改时间'
+    update_time datetime not null comment '修改时间',
+    index idx_txn_dt(txn_dt),
+    index idx_prod_cd_asset_cd(prod_cd, asset_cd)
 ) default character set utf8mb4 comment '交易表';
 
 INSERT INTO tr_trade_info_1 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, txn_user_id, del_flg, create_time, update_time) VALUES (2023070100001, '12345678', '000001', '2023-07-01', 500, 10000.00, 2, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');
@@ -73,7 +77,9 @@ create table tr_trade_info_2
     txn_user_id bigint comment '交易员',
     del_flg tinyint not null comment '删除标志',
     create_time datetime not null comment '创建时间',
-    update_time datetime not null comment '修改时间'
+    update_time datetime not null comment '修改时间',
+    index idx_txn_dt(txn_dt),
+    index idx_prod_cd_asset_cd(prod_cd, asset_cd)
 ) default character set utf8mb4 comment '交易表';
 
 INSERT INTO tr_trade_info_2 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, txn_user_id, del_flg, create_time, update_time) VALUES (2024010500001, '12345678', '000001', '2024-01-05', 400, 10000.00, 3, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');
@@ -91,7 +97,9 @@ create table tr_trade_info_3
     txn_user_id bigint comment '交易员',
     del_flg tinyint not null comment '删除标志',
     create_time datetime not null comment '创建时间',
-    update_time datetime not null comment '修改时间'
+    update_time datetime not null comment '修改时间',
+    index idx_txn_dt(txn_dt),
+    index idx_prod_cd_asset_cd(prod_cd, asset_cd)
 ) default character set utf8mb4 comment '交易表';
 
 INSERT INTO tr_trade_info_3 (txn_id, prod_cd, asset_cd, txn_dt, txn_cnt, txn_amt, txn_user_id, del_flg, create_time, update_time) VALUES (2024070100001, '12345678', '000001', '2024-07-01', 100, 10000.00, 2, 1, '2023-09-01 12:00:00', '2023-09-01 12:00:00');

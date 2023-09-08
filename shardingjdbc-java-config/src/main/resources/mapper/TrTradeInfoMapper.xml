@@ -32,6 +32,7 @@
             tti.txn_cnt,
             tti.txn_amt,
             tti.txn_user_id,
+            user.nickname as txnUserName,
             tti.del_flg,
             tti.create_time,
             tti.update_time
@@ -40,6 +41,12 @@
         on tti.txn_user_id = user.user_id and user.del_flg = 1
         where tti.del_flg = 1
         and tti.txn_dt between #{trTradeInfo.beginTxnDt} and #{trTradeInfo.endTxnDt}
+        <if test="trTradeInfo.prodCd != null and trTradeInfo.prodCd != ''">
+            and tti.prod_cd = #{trTradeInfo.prodCd}
+        </if>
+        <if test="trTradeInfo.assetCd != null and trTradeInfo.assetCd != ''">
+            and tti.asset_cd = #{trTradeInfo.assetCd}
+        </if>
         order by tti.txn_cnt desc
     </select>
 

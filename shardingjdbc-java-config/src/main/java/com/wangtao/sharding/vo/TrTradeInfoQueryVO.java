@@ -17,4 +17,8 @@ public class TrTradeInfoQueryVO {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate endTxnDt;
+
+    private String prodCd;
+
+    private String assetCd;
 }

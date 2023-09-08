@@ -40,4 +40,11 @@ public final class DateUtils {
         }
         return LocalDate.parse(dataStr, SHORT_DATE);
     }
+
+    public static String formatInteger(LocalDate date) {
+        if (Objects.isNull(date)) {
+            return null;
+        }
+        return date.format(SHORT_DATE);
+    }
 }
