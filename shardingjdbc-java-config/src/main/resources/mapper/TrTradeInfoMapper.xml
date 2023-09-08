@@ -42,4 +42,34 @@
     and tti.txn_dt between #{trTradeInfo.beginTxnDt} and #{trTradeInfo.endTxnDt}
     order by tti.txn_cnt desc
   </select>
+
+  <insert id="insertBatch">
+    insert into tr_trade_info(
+      txn_id,
+      prod_cd,
+      asset_cd,
+      txn_dt,
+      txn_cnt,
+      txn_amt,
+      txn_user_id,
+      del_flg,
+      create_time,
+      update_time
+    )
+    values
+    <foreach collection="trTradeInfoCollection" item="item" separator=",">
+    (
+       #{item.txnId,jdbcType=NUMERIC},
+       #{item.prodCd,jdbcType=VARCHAR},
+       #{item.assetCd,jdbcType=VARCHAR},
+       #{item.txnDt},
+       #{item.txnCnt,jdbcType=NUMERIC},
+       #{item.txnAmt,jdbcType=DECIMAL},
+       #{item.txnUserId,jdbcType=NUMERIC},
+       #{item.delFlg,jdbcType=NUMERIC},
+       #{item.createTime},
+       #{item.updateTime}
+    )
+    </foreach>
+  </insert>
 </mapper>
