@@ -58,8 +58,10 @@ public class ShardingJdbcConfig {
         Collection<RuleConfiguration> ruleConfigs = ruleConfigs();
         // 构建属性配置
         Properties props = new Properties();
-        // 打印sql
+        // 打印SQL
         props.put("sql-show", true);
+        // 简单SQL, 只是打印实际数据源, 改写之后的SQL条数, 如果想看实际SQL, 将参数改为false
+        props.put("sql-simple", true);
         return ShardingSphereDataSourceFactory.createDataSource(databaseName, modeConfig, dataSourceMap, ruleConfigs, props);
     }
 
