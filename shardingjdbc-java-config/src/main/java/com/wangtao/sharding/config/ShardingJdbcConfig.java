@@ -14,7 +14,6 @@ import org.apache.shardingsphere.sharding.api.config.rule.ShardingTableRuleConfi
 import org.apache.shardingsphere.sharding.api.config.strategy.keygen.KeyGenerateStrategyConfiguration;
 import org.apache.shardingsphere.sharding.api.config.strategy.sharding.StandardShardingStrategyConfiguration;
 import org.apache.shardingsphere.single.api.config.SingleRuleConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,11 +47,11 @@ public class ShardingJdbcConfig {
      */
     @Primary
     @Bean
-    public DataSource dataSource(DataSource druidDataSource, DataSourceProperties dataSourceProperties) throws SQLException {
+    public DataSource dataSource(DataSource druidDataSource) throws SQLException {
         // 指定逻辑 Database 名称
         String databaseName = "tradedb";
         // 构建运行模式
-        ModeConfiguration modeConfig = modeConfiguration(dataSourceProperties);
+        ModeConfiguration modeConfig = modeConfiguration();
         // 构建真实数据源
         Map<String, DataSource> dataSourceMap = dataSourceMap(druidDataSource);
         // 构建具体规则
@@ -70,21 +69,20 @@ public class ShardingJdbcConfig {
      * 数据源信息key: /metadata/tradedb/versions/0/data_sources
      * 数据表key parent: /metadata/tradedb/schemas/tradedb/tables
      */
-    private ModeConfiguration modeConfiguration(DataSourceProperties dataSourceProperties) {
-        Properties properties = new Properties();
-        properties.setProperty("provider", "MySQL");
-        properties.setProperty("jdbc_url", dataSourceProperties.getUrl());
-        properties.setProperty("username", dataSourceProperties.getUsername());
-        properties.setProperty("password", dataSourceProperties.getPassword());
+    private ModeConfiguration modeConfiguration() {
+        /*
+         * 使用内存数据库H2, 若使用别的存储介质, shardingjdbc反序列回来时存在各种各样的bug
+         * Properties properties = new Properties();
+         * properties.setProperty("provider", "MySQL");
+         * properties.setProperty("jdbc_url", dataSourceProperties.getUrl());
+         * properties.setProperty("username", dataSourceProperties.getUsername());
+         * properties.setProperty("password", dataSourceProperties.getPassword());
+         */
         StandalonePersistRepositoryConfiguration persistRepositoryConfiguration =
-                new StandalonePersistRepositoryConfiguration("JDBC", properties);
+                new StandalonePersistRepositoryConfiguration("JDBC", new Properties());
         return new ModeConfiguration("Standalone", persistRepositoryConfiguration);
     }
 
-    /**
-     * 使用tomcat数据源由于元数据存在时反序列化时信息不对称, 导致连接不上
-     * shardingjdbc使用tomcat dataSource存在bug
-     */
     private Map<String, DataSource> dataSourceMap(DataSource druidDataSource) {
         Map<String, DataSource> dataSourceMap = new HashMap<>();
         // 注意key是真实的数据库名称, 否则加载不了表的元数据(单表、广播表)
