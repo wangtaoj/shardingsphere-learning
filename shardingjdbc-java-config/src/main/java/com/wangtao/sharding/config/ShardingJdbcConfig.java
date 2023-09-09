@@ -1,6 +1,6 @@
 package com.wangtao.sharding.config;
 
-import com.zaxxer.hikari.HikariDataSource;
+import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import org.apache.shardingsphere.broadcast.api.config.BroadcastRuleConfiguration;
 import org.apache.shardingsphere.driver.api.ShardingSphereDataSourceFactory;
 import org.apache.shardingsphere.infra.config.algorithm.AlgorithmConfiguration;
@@ -14,8 +14,11 @@ import org.apache.shardingsphere.sharding.api.config.rule.ShardingTableRuleConfi
 import org.apache.shardingsphere.sharding.api.config.strategy.keygen.KeyGenerateStrategyConfiguration;
 import org.apache.shardingsphere.sharding.api.config.strategy.sharding.StandardShardingStrategyConfiguration;
 import org.apache.shardingsphere.single.api.config.SingleRuleConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -29,19 +32,29 @@ import java.util.*;
 public class ShardingJdbcConfig {
 
     /**
+     * 创建druid数据源
+     */
+    @ConfigurationProperties("spring.datasource.druid")
+    @Bean
+    public DataSource druidDataSource() {
+        return DruidDataSourceBuilder.create().build();
+    }
+
+    /**
      * 注入shardingjdbc构建出来的数据源
      * 如果表没有加载到元数据中
      * 1) 检查actualDataNodes属性, 要配置真实的database.table
      * 2) 检查数据源的key, 必须为真实的database name
      */
+    @Primary
     @Bean
-    public DataSource dataSource() throws SQLException {
+    public DataSource dataSource(DataSource druidDataSource, DataSourceProperties dataSourceProperties) throws SQLException {
         // 指定逻辑 Database 名称
         String databaseName = "tradedb";
         // 构建运行模式
-        ModeConfiguration modeConfig = modeConfiguration();
+        ModeConfiguration modeConfig = modeConfiguration(dataSourceProperties);
         // 构建真实数据源
-        Map<String, DataSource> dataSourceMap = dataSourceMap();
+        Map<String, DataSource> dataSourceMap = dataSourceMap(druidDataSource);
         // 构建具体规则
         Collection<RuleConfiguration> ruleConfigs = ruleConfigs();
         // 构建属性配置
@@ -57,27 +70,25 @@ public class ShardingJdbcConfig {
      * 数据源信息key: /metadata/tradedb/versions/0/data_sources
      * 数据表key parent: /metadata/tradedb/schemas/tradedb/tables
      */
-    private ModeConfiguration modeConfiguration() {
+    private ModeConfiguration modeConfiguration(DataSourceProperties dataSourceProperties) {
         Properties properties = new Properties();
         properties.setProperty("provider", "MySQL");
-        properties.setProperty("jdbc_url", "jdbc:mysql://localhost:3306/tradedb_1?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
-        properties.setProperty("username", "root");
-        properties.setProperty("password", "123456");
+        properties.setProperty("jdbc_url", dataSourceProperties.getUrl());
+        properties.setProperty("username", dataSourceProperties.getUsername());
+        properties.setProperty("password", dataSourceProperties.getPassword());
         StandalonePersistRepositoryConfiguration persistRepositoryConfiguration =
                 new StandalonePersistRepositoryConfiguration("JDBC", properties);
         return new ModeConfiguration("Standalone", persistRepositoryConfiguration);
     }
 
-    private Map<String, DataSource> dataSourceMap() {
+    /**
+     * 使用tomcat数据源由于元数据存在时反序列化时信息不对称, 导致连接不上
+     * shardingjdbc使用tomcat dataSource存在bug
+     */
+    private Map<String, DataSource> dataSourceMap(DataSource druidDataSource) {
         Map<String, DataSource> dataSourceMap = new HashMap<>();
-        // 使用tomcat数据源由于元数据存在时反序列化时信息不对称, 导致连接不上
-        HikariDataSource dataSource1 = new HikariDataSource();
-        dataSource1.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource1.setJdbcUrl("jdbc:mysql://localhost:3306/tradedb_1?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
-        dataSource1.setUsername("root");
-        dataSource1.setPassword("123456");
         // 注意key是真实的数据库名称, 否则加载不了表的元数据(单表、广播表)
-        dataSourceMap.put("tradedb_1", dataSource1);
+        dataSourceMap.put("tradedb_1", druidDataSource);
         return dataSourceMap;
     }
 
