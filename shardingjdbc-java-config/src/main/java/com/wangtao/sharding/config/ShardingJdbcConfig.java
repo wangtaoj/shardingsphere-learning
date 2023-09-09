@@ -1,5 +1,6 @@
 package com.wangtao.sharding.config;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import org.apache.shardingsphere.broadcast.api.config.BroadcastRuleConfiguration;
 import org.apache.shardingsphere.driver.api.ShardingSphereDataSourceFactory;
@@ -34,8 +35,8 @@ public class ShardingJdbcConfig {
      * 创建druid数据源
      */
     @ConfigurationProperties("spring.datasource.druid")
-    @Bean
-    public DataSource druidDataSource() {
+    @Bean(initMethod = "init")
+    public DruidDataSource druidDataSource() {
         return DruidDataSourceBuilder.create().build();
     }
 
